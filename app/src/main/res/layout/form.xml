@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <EditText
+            android:id="@+id/editTextPhone"
+            android:layout_width="398dp"
+            android:layout_height="63dp"
+            android:layout_weight="1"
+            android:ems="10"
+            android:inputType="phone" />
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="331dp"
+            android:layout_height="3dp"
+            android:layout_weight="1"
+            android:text="Button" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+</LinearLayout>
