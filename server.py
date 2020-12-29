@@ -12,7 +12,7 @@ def display_image(bytes):
 	print(time.time(), len(bytes), bytes[:10])
 
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server_socket.bind(("192.168.100.6", 50001))
+server_socket.bind(("192.168.100.6", 50000))
 
 server_socket.listen(5)
 

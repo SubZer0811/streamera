@@ -22,6 +22,7 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,202 +56,37 @@ import java.util.List;
 
 import com.example.testing_cv.R;
 
-public class MainActivity extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener2 {
+public class MainActivity extends AppCompatActivity{
 
-    // OpenCV variables
-    private boolean isFrontCam = false;
-    private Mat mRgba;
-    private CameraBridgeViewBase opencvCamView;
-    private BaseLoaderCallback baseLoaderCallback;
-    private Size size = new Size(128, 72);
+    public static final String SERVER = "com.example.testing_cv.SERVER";
+    public static final String PORT = "com.example.testing_cv.PORT";
 
-    // GUI and other variables
-    private static final String TAG = "MainActivity";
-    private Handler mainHandler;
-    private TextView logTv;
-    private Button connect;
-    private TextView portButton, serverButton;
-
-    // socket variables
-    private boolean lock = true;
-    private boolean init_status = false;
-    private byte[] arr;
-    // Initializations
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        // USE THIS TO FIND VARIOUS FRAME SIZES
-
-//        Camera camera = Camera.open();
-//        List<Camera.Size> sizes = camera.getParameters().getSupportedPictureSizes();
-//
-//        //searches for good picture quality
-//        for(Camera.Size dimens : sizes){
-//            Log.d("SIZEOFFRAME", "Width: " + dimens.width + " Height: " + dimens.height);
-//        }
-
+        Log.d("TEST", "IMHERE");
         super.onCreate(savedInstanceState);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
-        mainHandler = new Handler();
 
-        connect = findViewById(R.id.connect);
-        portButton = findViewById(R.id.port);
-        serverButton = findViewById(R.id.server);
-
-        opencvCamView = findViewById(R.id.camView);
-        opencvCamView.setMaxFrameSize(640, 480);
-        opencvCamView.setVisibility(SurfaceView.VISIBLE);
-        opencvCamView.setCvCameraViewListener(this);
-
-        baseLoaderCallback = new BaseLoaderCallback(this) {
+        Button vid_stream_button = (Button) findViewById(R.id.VideoStream);
+        vid_stream_button.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onManagerConnected(int status) {
-                switch (status){
-                    case BaseLoaderCallback.SUCCESS:
-                        Log.wtf(TAG,"OpenCV loaded successfully");
-                        opencvCamView.enableView();
-                        break;
-                    default:
-                        super.onManagerConnected(status);
-                        break;
-                }
-            }
-        };
-    }
-
-    Thread consumer = new Thread(new Runnable() {
-
-        @Override
-        public void run() {
-            String TAG = "SOCKET";
-            Log.d(TAG, "Consumer Started");
-            try {
-                /*
-                Integer PORT = Integer.parseInt(portButton.getText().toString());
-                String SERVER = serverButton.getText().toString();
-                Log.d("SOCKET", "SERVER: "+ SERVER + "   PORT: " + PORT);
-                Socket socket = new Socket(SERVER, PORT);
-                 */
-                Socket socket = new Socket("192.168.100.6", 50001);
-                Log.d(TAG, "Connected to Server");
-                DataOutputStream out = new DataOutputStream(socket.getOutputStream());
-
-                while (true) if (!lock) {              // if lock == 0, its turn of consumer
-//                    out.write((""+arr.length+"#").getBytes());
-                    Log.d("TIMING", "CONS_START");
-                    Log.d(TAG, "Consumed: ");
-                    out.write(arr);
-                    lock = true;
-                    Log.d("TIMING", "CONS_END");
-//                    break;
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    });
-    // Camera and image processing >>>>>
-
-    @Override
-    public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
-        mRgba = inputFrame.rgba();
-
-        if(!init_status){
-            connect.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    consumer.start();
-                    init_status = true;
-                }
-            });
-        }
-        else{
-            if(lock){
-                Log.d("TIMING", "PROD_START");
-                Mat dst = new Mat();
-                // Convert image to RGB
-                Imgproc.cvtColor(mRgba,dst,Imgproc.COLOR_BGRA2BGR);
-                MatOfByte byteMat = new MatOfByte();
-
-                arr = null;
-                Imgcodecs.imencode(".jpg", dst, byteMat);
-                arr = byteMat.toArray();
-                Log.d("SIZE__", "LENGTH: "+arr.length);
-//                Log.d("SIZE__", ""+arr[0]+" "+arr[1]+" "+arr[2]+" "+arr[3]+" "+arr[4]+" ");
-
-
-                // flatten Mat object and save it to arr (byte[])
-//                dst.get(0, 0, arr);
-
-                lock = false;
-                Log.d("TIMING", "PROD_END");
-
-            }
-        }
-        return mRgba;
-    }
-
-    @Override
-    public void onCameraViewStarted(int width, int height) {
-        Log.d("INITINIT", ""+width+", "+height);
-        mRgba = new Mat(height,width, CvType.CV_8UC4);
-        arr = new byte[height*width*3];
-    }
-
-    @Override
-    public void onCameraViewStopped() {
-        mRgba.release();
-        Log.wtf(TAG,"CameraView Stopped");
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if(opencvCamView !=null){
-            opencvCamView.disableView();
-            Log.wtf(TAG,"Camera Paused");
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if(!OpenCVLoader.initDebug()){
-            Log.wtf(TAG,"OpenCVLoader.initdebug() returned false");
-            Toast.makeText(getApplicationContext(),"Prob 00",Toast.LENGTH_SHORT).show();
-        }
-        else{
-            baseLoaderCallback.onManagerConnected(BaseLoaderCallback.SUCCESS);
-            Log.wtf(TAG,"Camera Resumed");
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if(opencvCamView !=null){
-            opencvCamView.disableView();
-            Log.w(TAG,"Camera Turned OFF");
-        }
-    }
-
-    private void swapCamera() {
-        opencvCamView.disableView();
-        opencvCamView.setCameraIndex(isFrontCam ? 0 : 1);
-        opencvCamView.enableView();
-    }
-
-
-    private void Log(String text) {
-        final String ftext = text+"\n";
-        mainHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                logTv.append(ftext);
+            public void onClick(View v) {
+                openVideoActivity();
             }
         });
+    }
+
+    public void openVideoActivity(){
+        EditText server_ = (EditText) findViewById(R.id.IPAddr);
+        String server = server_.getText().toString();
+
+        EditText port_ = (EditText) findViewById(R.id.Port);
+        Integer port = Integer.parseInt(port_.getText().toString());
+
+
+        Intent intent  = new Intent(this, VideoStream.class);
+        intent.putExtra(SERVER, server);
+        intent.putExtra(PORT, port);
+        startActivity(intent);
     }
 }

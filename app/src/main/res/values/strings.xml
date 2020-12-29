@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Streamera</string>
+    <string name="stream_video">Stream Video</string>
+    <string name="send_image">Send Image</string>
 </resources>
