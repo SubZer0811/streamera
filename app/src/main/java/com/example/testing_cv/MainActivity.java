@@ -37,11 +37,13 @@ import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfByte;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.MatOfPoint2f;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
+import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 
 import java.io.DataOutputStream;
@@ -72,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
     // socket variables
     private boolean lock = true;
     private boolean init_status = false;
-    byte[] arr;
+    private byte[] arr;
     // Initializations
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,19 +127,24 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
             String TAG = "SOCKET";
             Log.d(TAG, "Consumer Started");
             try {
+                /*
                 Integer PORT = Integer.parseInt(portButton.getText().toString());
                 String SERVER = serverButton.getText().toString();
                 Log.d("SOCKET", "SERVER: "+ SERVER + "   PORT: " + PORT);
                 Socket socket = new Socket(SERVER, PORT);
+                 */
+                Socket socket = new Socket("192.168.100.6", 50001);
                 Log.d(TAG, "Connected to Server");
                 DataOutputStream out = new DataOutputStream(socket.getOutputStream());
 
                 while (true) if (!lock) {              // if lock == 0, its turn of consumer
+//                    out.write((""+arr.length+"#").getBytes());
                     Log.d("TIMING", "CONS_START");
                     Log.d(TAG, "Consumed: ");
                     out.write(arr);
                     lock = true;
                     Log.d("TIMING", "CONS_END");
+//                    break;
                 }
 
             } catch (Exception e) {
@@ -166,9 +173,17 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
                 Mat dst = new Mat();
                 // Convert image to RGB
                 Imgproc.cvtColor(mRgba,dst,Imgproc.COLOR_BGRA2BGR);
+                MatOfByte byteMat = new MatOfByte();
+
+                arr = null;
+                Imgcodecs.imencode(".jpg", dst, byteMat);
+                arr = byteMat.toArray();
+                Log.d("SIZE__", "LENGTH: "+arr.length);
+//                Log.d("SIZE__", ""+arr[0]+" "+arr[1]+" "+arr[2]+" "+arr[3]+" "+arr[4]+" ");
+
 
                 // flatten Mat object and save it to arr (byte[])
-                dst.get(0, 0, arr);
+//                dst.get(0, 0, arr);
 
                 lock = false;
                 Log.d("TIMING", "PROD_END");

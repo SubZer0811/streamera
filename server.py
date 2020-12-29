@@ -5,8 +5,14 @@ import numpy as np
 import cv2
 from io import BytesIO
 
+def display_image(bytes):
+	frame = cv2.imdecode(np.fromstring(bytes, dtype=np.uint8), cv2.IMREAD_UNCHANGED)
+	cv2.imshow("frame", frame)
+	cv2.waitKey(1)
+	print(time.time(), len(bytes), bytes[:10])
+
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server_socket.bind(("192.168.100.6", 50000))
+server_socket.bind(("192.168.100.6", 50001))
 
 server_socket.listen(5)
 
@@ -15,33 +21,25 @@ print(f"CLIENT JOINED: {cli_sock}")
 
 buf_size = 0
 buf = []
-WIDTH = 640
-HEIGHT = 480
-PLANE_SIZE = WIDTH*HEIGHT
-SIZE = PLANE_SIZE*3
+SIZE = 1500
 first = 0
 str_buf = b''
 
 start = time.time()
 while True:
 
-	
 	msg = cli_sock.recv(SIZE)
 	if(msg):
-		buf_size += len(msg)
 		str_buf += msg
+		# print(len(str_buf))
 
-		if(buf_size >= SIZE):
-			
-			buf_size = 0
-			
-			data = np.fromstring(str_buf[:SIZE], dtype='uint8')
-			frame = data.reshape((HEIGHT,WIDTH,3))
-
-			cv2.imshow("recvd", frame)
-			cv2.waitKey(1)
-			str_buf = str_buf[SIZE:]
-			print(time.time() - start)
-			start = time.time()
+		# if ffd9 exists:
+		pos = str_buf.find(b'\xff\xd9')
+		if pos >= 0:
+			# call display_image()
+			display_image(str_buf[:pos+2])
+			# replace str_buf with left over bytes
+			str_buf = str_buf[pos+2:]
+		# else str_buf = str_buf + msg
 
 server_socket.close()

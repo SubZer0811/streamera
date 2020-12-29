@@ -16,16 +16,6 @@
         android:layout_marginTop="0dp"
         android:layout_marginBottom="50dp" />
 
-<!--    <android.support.v7.widget.Toolbar-->
-<!--        android:id="@+id/toolBar"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="?attr/actionBarSize"-->
-<!--        android:background="?attr/colorPrimary"-->
-<!--        android:elevation="4dp"-->
-<!--        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"-->
-<!--        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"-->
-<!--        />-->
-
     <ToggleButton
         android:id="@+id/connect"
         android:layout_width="88dp"
@@ -37,6 +27,7 @@
         android:layout_marginEnd="56dp"
         android:layout_marginBottom="-1dp"
         android:textOff="Start"
+        android:textOn="Exit"
         android:textSize="10sp" />
 
     <EditText
@@ -62,6 +53,5 @@
         android:autofillHints="SERVER"
         android:ems="10"
         android:inputType="text" />
-
 
 </RelativeLayout>
