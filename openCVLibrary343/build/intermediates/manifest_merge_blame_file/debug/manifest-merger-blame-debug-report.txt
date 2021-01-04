@@ -5,8 +5,8 @@
 5    android:versionName="3.4.3" > <!-- <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="21" /> -->
 6    <uses-sdk
 7        android:minSdkVersion="21"
-7-->/media/subzer0/pipeline/testing_cv/openCVLibrary343/src/main/AndroidManifest.xml
+7-->/media/subzer0/pipeline/streamera/openCVLibrary343/src/main/AndroidManifest.xml
 8        android:targetSdkVersion="30" />
-8-->/media/subzer0/pipeline/testing_cv/openCVLibrary343/src/main/AndroidManifest.xml
+8-->/media/subzer0/pipeline/streamera/openCVLibrary343/src/main/AndroidManifest.xml
 9
 10</manifest>

@@ -1,4 +1,4 @@
-package com.example.testing_cv;
+package com.example.streamera;
 
 import android.content.Context;
 

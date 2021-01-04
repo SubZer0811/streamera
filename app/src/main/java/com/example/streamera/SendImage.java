@@ -1,4 +1,4 @@
-package com.example.testing_cv;
+package com.example.streamera;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -10,8 +10,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 
-import com.example.testing_cv.MainActivity;
-import com.example.testing_cv.R;
+import com.example.streamera.R;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
@@ -74,17 +73,17 @@ public class SendImage extends AppCompatActivity implements CameraBridgeViewBase
         });
 
         init.start();
+        consumer.start();
 
         captureButton = (Button) findViewById(R.id.Capture);
         captureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                consumer.start();
+                if(lock){
+                    lock = false;
+                }
             }
         });
-
-
-
 
         opencvCamView = findViewById(R.id.camView);
         opencvCamView.setMaxFrameSize(640, 480);
@@ -110,18 +109,24 @@ public class SendImage extends AppCompatActivity implements CameraBridgeViewBase
 
         @Override
         public void run() {
-            try {       // if lock == 0, its turn of consumer
-                Log.d("SOCKET", "Attempting to send");
-                Mat dst = new Mat();
-                // Convert image to RGB
-                Imgproc.cvtColor(mRgba,dst,Imgproc.COLOR_BGRA2RGB);
-                MatOfByte byteMat = new MatOfByte();
+            try {
 
-                arr = null;
-                Imgcodecs.imencode(".jpg", dst, byteMat);
-                arr = byteMat.toArray();
-                out.write(arr);
-                Log.d("SOCKET", "SENT");
+                while (true) { // if lock == 0, its turn of consumer
+                    if(!lock) {
+                        Log.d("SOCKET", "Attempting to send");
+                        Mat dst = new Mat();
+                        // Convert image to RGB
+                        Imgproc.cvtColor(mRgba, dst, Imgproc.COLOR_BGRA2RGB);
+                        MatOfByte byteMat = new MatOfByte();
+
+                        arr = null;
+                        Imgcodecs.imencode(".jpg", dst, byteMat);
+                        arr = byteMat.toArray();
+                        out.write(arr);
+                        Log.d("SOCKET", "SENT");
+                        lock = true;
+                    }
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
