@@ -74,6 +74,14 @@ public class MainActivity extends AppCompatActivity{
                 openVideoActivity();
             }
         });
+
+        Button img_send_button = (Button) findViewById(R.id.ImageSend);
+        img_send_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openImageActivity();
+            }
+        });
     }
 
     public void openVideoActivity(){
@@ -85,6 +93,20 @@ public class MainActivity extends AppCompatActivity{
 
 
         Intent intent  = new Intent(this, VideoStream.class);
+        intent.putExtra(SERVER, server);
+        intent.putExtra(PORT, port);
+        startActivity(intent);
+    }
+
+    public void openImageActivity(){
+        EditText server_ = (EditText) findViewById(R.id.IPAddr);
+        String server = server_.getText().toString();
+
+        EditText port_ = (EditText) findViewById(R.id.Port);
+        Integer port = Integer.parseInt(port_.getText().toString());
+
+
+        Intent intent  = new Intent(this, SendImage.class);
         intent.putExtra(SERVER, server);
         intent.putExtra(PORT, port);
         startActivity(intent);
