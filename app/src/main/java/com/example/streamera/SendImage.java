@@ -37,7 +37,6 @@ public class SendImage extends AppCompatActivity implements CameraBridgeViewBase
     private static final String TAG = "SendImage";
     private Button captureButton;
 
-
     // socket variables
     private boolean lock = true;
     private boolean init_status = false;
@@ -63,10 +62,10 @@ public class SendImage extends AppCompatActivity implements CameraBridgeViewBase
             @Override
             public void run() {
                 try{
-                    Log.d("SOCKET", "trying to connect!");
+                    Log.d(TAG+"SOCKET", "trying to connect!");
                     socket = new Socket(server, port);
                     out = new DataOutputStream(socket.getOutputStream());
-                    Log.d("SOCKET", "Connected");
+                    Log.d(TAG+"SOCKET", "Connected");
                     init_status = true;
                 }
                 catch (Exception e){
@@ -148,7 +147,6 @@ public class SendImage extends AppCompatActivity implements CameraBridgeViewBase
             }
         }
     });
-    // Camera and image processing >>>>>
 
     @Override
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
@@ -203,14 +201,14 @@ public class SendImage extends AppCompatActivity implements CameraBridgeViewBase
             try {
                 socket.close();
                 if(socket.isClosed()){
-                    Log.d("SOCKET", "Socket is closed");
+                    Log.d(TAG+"SOCKET", "Socket is closed");
                 }
                 else{
-                    Log.d("SOCKET", "Socket is NOT closed");
+                    Log.d(TAG+"SOCKET", "Socket is NOT closed");
                 }
             }
             catch (Exception e){
-                Log.d("SOCKET", "Could not close socket");
+                Log.d(TAG+"SOCKET", "Could not close socket");
                 e.printStackTrace();
             }
         }

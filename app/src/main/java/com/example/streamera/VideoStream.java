@@ -4,9 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.SurfaceView;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.Toast;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
@@ -45,16 +47,6 @@ public class VideoStream extends AppCompatActivity implements CameraBridgeViewBa
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        // USE THIS TO FIND VARIOUS FRAME SIZES
-
-//        Camera camera = Camera.open();
-//        List<Camera.Size> sizes = camera.getParameters().getSupportedPictureSizes();
-//
-//        //searches for good picture quality
-//        for(Camera.Size dimens : sizes){
-//            Log.d("SIZEOFFRAME", "Width: " + dimens.width + " Height: " + dimens.height);
-//        }
-
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -68,11 +60,15 @@ public class VideoStream extends AppCompatActivity implements CameraBridgeViewBa
             @Override
             public void run() {
                 try{
+//                    Log.d("SOCKET", "trying to connect!");
                     socket = new Socket(server, port);
                     out = new DataOutputStream(socket.getOutputStream());
+//                    Log.d("SOCKET", "Connected");
+                    init_status = true;
                 }
                 catch (Exception e){
                     e.printStackTrace();
+                    init_status = false;
                 }
             }
         });
@@ -84,6 +80,13 @@ public class VideoStream extends AppCompatActivity implements CameraBridgeViewBa
         catch (Exception e){
             e.printStackTrace();
         }
+
+        if(!init_status){
+            Toast.makeText(this, "Could not connect to streamera server", Toast.LENGTH_SHORT).show();
+            finish();
+        }
+
+        consumer.start();
 
         opencvCamView = findViewById(R.id.camView);
         opencvCamView.setMaxFrameSize(640, 480);
@@ -120,31 +123,25 @@ public class VideoStream extends AppCompatActivity implements CameraBridgeViewBa
             }
         }
     });
-    // Camera and image processing >>>>>
 
     @Override
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
         mRgba = inputFrame.rgba();
 
-        if(!init_status){
-            consumer.start();
-            init_status = true;
+        if(lock){
+            Mat dst = new Mat();
+            // Convert image to RGB
+            Imgproc.cvtColor(mRgba,dst,Imgproc.COLOR_BGRA2RGB);
+            MatOfByte byteMat = new MatOfByte();
+
+            arr = null;
+            Imgcodecs.imencode(".jpg", dst, byteMat);
+            arr = byteMat.toArray();
+
+            lock = false;
+
         }
-        else{
-            if(lock){
-                Mat dst = new Mat();
-                // Convert image to RGB
-                Imgproc.cvtColor(mRgba,dst,Imgproc.COLOR_BGRA2RGB);
-                MatOfByte byteMat = new MatOfByte();
 
-                arr = null;
-                Imgcodecs.imencode(".jpg", dst, byteMat);
-                arr = byteMat.toArray();
-
-                lock = false;
-
-            }
-        }
         return mRgba;
     }
 

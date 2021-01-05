@@ -23,13 +23,13 @@ import java.net.Socket;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final String SERVER = "com.example.testing_cv.SERVER";
-    public static final String PORT = "com.example.testing_cv.PORT";
+    public static final String SERVER = "com.example.streamera.SERVER";
+    public static final String PORT = "com.example.streamera.PORT";
     public static Socket socket;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d("TEST", "IMHERE");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
