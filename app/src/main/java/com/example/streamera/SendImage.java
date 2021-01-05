@@ -5,10 +5,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.streamera.R;
 
@@ -65,14 +67,28 @@ public class SendImage extends AppCompatActivity implements CameraBridgeViewBase
                     socket = new Socket(server, port);
                     out = new DataOutputStream(socket.getOutputStream());
                     Log.d("SOCKET", "Connected");
+                    init_status = true;
                 }
                 catch (Exception e){
                     e.printStackTrace();
+                    init_status = false;
                 }
             }
         });
 
         init.start();
+        try {
+            init.join();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
+        if(!init_status){
+            Toast.makeText(this, "Could not connect to streamera server", Toast.LENGTH_SHORT).show();
+            finish();
+        }
+
         consumer.start();
 
         captureButton = (Button) findViewById(R.id.Capture);
@@ -179,6 +195,26 @@ public class SendImage extends AppCompatActivity implements CameraBridgeViewBase
             }
             opencvCamView.disableView();
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)  {
+        if (keyCode == KeyEvent.KEYCODE_BACK ) {
+            try {
+                socket.close();
+                if(socket.isClosed()){
+                    Log.d("SOCKET", "Socket is closed");
+                }
+                else{
+                    Log.d("SOCKET", "Socket is NOT closed");
+                }
+            }
+            catch (Exception e){
+                Log.d("SOCKET", "Could not close socket");
+                e.printStackTrace();
+            }
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     private void swapCamera() {

@@ -6,6 +6,7 @@ import android.os.Bundle;
 //import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowId;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -17,10 +18,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.streamera.R;
 
-public class MainActivity extends AppCompatActivity{
+import java.io.DataOutputStream;
+import java.net.Socket;
+
+public class MainActivity extends AppCompatActivity {
 
     public static final String SERVER = "com.example.testing_cv.SERVER";
     public static final String PORT = "com.example.testing_cv.PORT";
+    public static Socket socket;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +45,7 @@ public class MainActivity extends AppCompatActivity{
         img_send_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openImageActivity();
+                    openImageActivity();
             }
         });
     }
@@ -65,8 +70,7 @@ public class MainActivity extends AppCompatActivity{
 
         EditText port_ = (EditText) findViewById(R.id.Port);
         Integer port = Integer.parseInt(port_.getText().toString());
-
-
+        
         Intent intent  = new Intent(this, SendImage.class);
         intent.putExtra(SERVER, server);
         intent.putExtra(PORT, port);
