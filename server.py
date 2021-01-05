@@ -40,11 +40,11 @@ def main(server, port):
 		
 		try:
 			cli_sock.sendall(b'asdf')
+			msg = cli_sock.recv(SIZE)
 		except:
 			print('[-] Client disconnected.\n[-] Terminating server.')
 			break
 
-		msg = cli_sock.recv(SIZE)
 		if(msg):
 			str_buf += msg
 

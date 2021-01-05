@@ -1,6 +1,8 @@
 package com.example.streamera;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 //import android.support.v7.app.AppCompatActivity;
 //import android.support.v7.widget.Toolbar;
@@ -11,6 +13,8 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 //import com.example.testing_cv.R;
 //import com.felhr.usbserial.UsbSerialDevice;
@@ -32,6 +36,14 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if(ContextCompat.checkSelfPermission(this,
+                Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(MainActivity.this,
+                    new String[] { Manifest.permission.CAMERA },
+                    200);
+        }
 
         Button vid_stream_button = (Button) findViewById(R.id.VideoStream);
         vid_stream_button.setOnClickListener(new View.OnClickListener() {
