@@ -20,7 +20,16 @@ To get the ip-address of your computer, run the following command ```ifconfig```
 Run the app on your phone. Make sure to grant permission for the camera. 
 <br>Enter the correct server IP and PORT. Press any of mode that you would like to use.
 
+## Demo
+
+One could extend the display_image() function in server.py to do almost anything that they want to with the frame. For example, the received frame is passed through a darknet neural network for inference. 
+
+![streamera in action](demo/output1.png)
+<br>streamera in action<br>
+![output of server.py](demo/output2.jpeg)
+<br>output of server.py<br>
+
 ## Why this application???
 There have been a lot of times when I needed to test out some Image Processing or Computer Vision algorithms. An issue that I used to face was trying to get a proper test image. I either had to take pictures, download them to my computer and then run my algorithm or I had to use the built-in camera on my computer.  Both methods have serious drawbacks. Hence I put together this app to solve these issues. A reason that I did not use existing apps was that I wanted the application running on my laptop to be coded in python (this is where I do most of my CV work). This also allowed me to learn android app development. 
 
-## Demo
+
