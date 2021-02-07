@@ -12,8 +12,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.example.streamera.R;
-
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.OpenCVLoader;
@@ -52,7 +50,7 @@ public class CaptureImage extends AppCompatActivity implements CameraBridgeViewB
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_send_image);
+        setContentView(R.layout.activity_capture_image);
 
         Intent intent = getIntent();
         server = intent.getStringExtra(MainActivity.SERVER);
