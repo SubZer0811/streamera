@@ -20,6 +20,19 @@
         android:textSize="10sp" />
 
     <Button
+        android:id="@+id/SendImage"
+        android:layout_width="88dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="327dp"
+        android:layout_marginEnd="314dp"
+        android:layout_marginBottom="110dp"
+        android:text="Send image"
+        android:textSize="10sp" />
+
+    <Button
         android:id="@+id/ImageSend"
         android:layout_width="88dp"
         android:layout_height="wrap_content"
@@ -29,7 +42,7 @@
         android:layout_marginStart="504dp"
         android:layout_marginEnd="138dp"
         android:layout_marginBottom="111dp"
-        android:text="Send Image"
+        android:text="Capture Image"
         android:textSize="10sp" />
 
     <EditText

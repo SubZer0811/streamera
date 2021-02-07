@@ -26,7 +26,7 @@ import org.opencv.imgproc.Imgproc;
 import java.io.DataOutputStream;
 import java.net.Socket;
 
-public class SendImage extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener2 {
+public class CaptureImage extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener2 {
 
     private boolean isFrontCam = false;
     private Mat mRgba;

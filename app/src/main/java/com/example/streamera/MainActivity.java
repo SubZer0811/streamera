@@ -53,11 +53,19 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Button img_send_button = (Button) findViewById(R.id.ImageSend);
-        img_send_button.setOnClickListener(new View.OnClickListener() {
+        Button capture_img_button = (Button) findViewById(R.id.ImageSend);
+        capture_img_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                     openImageActivity();
+            }
+        });
+
+        Button send_img_button = (Button) findViewById(R.id.SendImage);
+        send_img_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openSendImageActivity();
             }
         });
     }
@@ -83,6 +91,19 @@ public class MainActivity extends AppCompatActivity {
         EditText port_ = (EditText) findViewById(R.id.Port);
         Integer port = Integer.parseInt(port_.getText().toString());
         
+        Intent intent  = new Intent(this, CaptureImage.class);
+        intent.putExtra(SERVER, server);
+        intent.putExtra(PORT, port);
+        startActivity(intent);
+    }
+
+    public void openSendImageActivity(){
+        EditText server_ = (EditText) findViewById(R.id.IPAddr);
+        String server = server_.getText().toString();
+
+        EditText port_ = (EditText) findViewById(R.id.Port);
+        Integer port = Integer.parseInt(port_.getText().toString());
+
         Intent intent  = new Intent(this, SendImage.class);
         intent.putExtra(SERVER, server);
         intent.putExtra(PORT, port);

@@ -10,6 +10,8 @@
     <uses-feature android:name="android.hardware.camera.front.autofocus" android:required="true"/>
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.MANAGE_DOCUMENTS" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -20,7 +22,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity
-            android:name="com.example.streamera.SendImage"
+            android:name="com.example.streamera.CaptureImage"
             android:screenOrientation="landscape"
             android:parentActivityName="com.example.streamera.MainActivity" />
         <activity
@@ -34,6 +36,10 @@
         </activity>
         <activity
             android:name="com.example.streamera.VideoStream"
+            android:parentActivityName="com.example.streamera.MainActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name="com.example.streamera.SendImage"
             android:parentActivityName="com.example.streamera.MainActivity"
             android:screenOrientation="landscape" />
     </application>
